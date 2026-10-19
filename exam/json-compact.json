@@ -1,0 +1,1 @@
+{"prompt":"只輸出一個 JSON 物件，不要有任何其他文字、說明或程式碼區塊標記。\n物件需包含 host、status、latency_ms 三個欄位，\n值分別為 \"nas-01\"、\"online\"、23。","expect":{"host":"nas-01","status":"online","latency_ms":23}}

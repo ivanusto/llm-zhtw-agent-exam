@@ -1,0 +1,5 @@
+[
+ {"q":"你有 write_file、list_dir、read_file 三個工具。任務：找出 /project 底下最大的 .log 檔，讀它的最後 100 行，把摘要寫進 /project/summary.txt。請只列出你會依序呼叫的工具名稱，一行一個，不要解釋。","seq":["list_dir","read_file","write_file"]},
+ {"q":"你有 parse_json、write_file、http_get 三個工具。任務：抓 https://example.invalid/api/stats，取出 total 欄位，存成 /tmp/total.txt。請只列出你會依序呼叫的工具名稱，一行一個，不要解釋。","seq":["http_get","parse_json","write_file"]},
+ {"q":"你有 send_email、run_sql、format_table 三個工具。任務：查上季營收前十名客戶，排版成表格，寄給 finance@example.invalid。請只列出你會依序呼叫的工具名稱，一行一個，不要解釋。","seq":["run_sql","format_table","send_email"]}
+]

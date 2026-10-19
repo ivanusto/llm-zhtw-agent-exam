@@ -1,0 +1,15 @@
+{
+ "prefix":"你可以呼叫這個工具：\n{\"name\":\"search_files\",\"parameters\":{\"dir\":\"string\",\"pattern\":\"string\",\"max_results\":\"integer\"}}\n請只輸出一個 JSON 物件，格式為 {\"name\":..., \"arguments\":{...}}，不要有任何其他文字或 markdown 標記。\n\n任務：",
+ "tasks":[
+  {"task":"在 /var/log 找出所有 .err 檔，最多 20 筆","dir":["/var/log"],"max_results":20},
+  {"task":"在 /home/user/docs 搜尋含 invoice 的檔案，最多 5 筆","dir":["/home/user/docs"],"max_results":5},
+  {"task":"列出 /etc 底下的 .conf 檔，最多 100 筆","dir":["/etc"],"max_results":100},
+  {"task":"在 /tmp 找 core dump，最多 3 筆","dir":["/tmp"],"max_results":3},
+  {"task":"在 /srv/www 找 index.html，只要 1 筆","dir":["/srv/www"],"max_results":1},
+  {"task":"在 /opt 搜尋 *.tar.gz，最多 50 筆","dir":["/opt"],"max_results":50},
+  {"task":"在 /data 找出 2026 開頭的 csv，最多 10 筆","dir":["/data"],"max_results":10},
+  {"task":"在 /mnt/backup 找 .sql 檔，最多 25 筆","dir":["/mnt/backup"],"max_results":25},
+  {"task":"在 /usr/share 搜尋 licence 相關檔案，最多 15 筆","dir":["/usr/share"],"max_results":15},
+  {"task":"在 /root 找 .ssh 設定檔，最多 2 筆","dir":["/root","/root/.ssh"],"max_results":2}
+ ]
+}

@@ -1,5 +1,7 @@
 # 實測結果（2026-08-27，DGX Spark GB10）
 
+> 本頁分數使用 v1 判準（2026-08 的腳本）。v2 判準收緊了前三項，兩版數字不能直接比較，差異見 [README](../README.md#判準版本)。
+
 三顆模型同一份考卷、同一組判準。
 
 | | Qwen3.8-Flash-Next<br>UD-IQ4_XS | Qwen3.8-27B<br>pplx 後訓練混合精度 | Qwen3.8-27B<br>原版 FP8 |
