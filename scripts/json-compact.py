@@ -21,8 +21,12 @@ p.add_argument("--top-k",type=int,default=20)
 p.add_argument("--no-top-k",action="store_true",help="不送 top_k（OpenAI 等官方 API 不接受這個參數）")
 p.add_argument("--rounds",type=int,default=50)
 p.add_argument("--block",type=int,default=10,help="每幾輪算一組，報每組多行數的全距")
+p.add_argument("--seed",type=int,default=0,help="第 i 輪送 seed=此值+i")
+p.add_argument("--no-seed",action="store_true",help="不送 seed，交給伺服器")
 a=p.parse_args()
 TOPK=None if a.no_top_k else a.top_k
+# 每輪送不同的 seed：有些引擎（例如 TensorFold）沒收到 seed 時用固定的預設值，
+# temp=0.7 下 50 輪會逐字相同，等於只抽了一個樣本。逐輪遞增的 seed 讓各輪不同，同一組 seed 又可重現。
 # 預設不送 chat_template_kwargs：有些模板只認特定的 reasoning_effort 值，送錯直接丟 Jinja 例外，
 # 關思考改在伺服器層級（例如 llama-server 的 -rea off）。需要時用 --ctk 指定。
 C=Client(a,{})
@@ -30,7 +34,8 @@ BANK=load_bank("json-compact.json")
 
 rows=[]
 for i in range(a.rounds):
-    try: out=C.ask(BANK["prompt"],300,a.temp,top_p=a.top_p,top_k=TOPK)[0]; err=""
+    seed=None if a.no_seed else a.seed+i
+    try: out=C.ask(BANK["prompt"],300,a.temp,top_p=a.top_p,top_k=TOPK,seed=seed)[0]; err=""
     except AskError as e: out=""; err=str(e)
     obj=first_json(out)
     is_pretty=("\n" in obj)
@@ -53,8 +58,15 @@ print(f"  {a.label}：多行 pretty-print {pretty}/{a.rounds}、單行緊湊 {a.
       f"欄位正確 {valid}/{a.rounds}、平均輸出 {avg:.0f} 字元（temp={a.temp} top_p={a.top_p}{topk}）")
 if len(blocks)>1: print(f"  每 {a.block} 輪多行數：{blocks}，全距 {bs['min']}–{bs['max']}")
 if fails: print(f"  另有 {fails} 輪請求失敗，不計入緊湊或多行")
+# 前 160 字元加總長度當指紋，這道題的回應很短，足以分辨
+distinct=len({(r["raw"],r["chars"]) for r in ok_rows})
+print(f"  {distinct} 種不同輸出（seed={'不送' if a.no_seed else f'{a.seed} 起逐輪 +1'}）")
+if distinct==1 and len(ok_rows)>1:
+    print("  注意：每輪輸出逐字相同。可能是模型在這題的分布本來就集中，也可能是伺服器忽略了 temperature 或 seed；"
+          "拿開放式提示換幾個 seed 對照才分得出來，見 results/v2-2026-10-20.md")
 
 emit({"label":a.label,"model":a.model,"scoring":"v2","rounds":a.rounds,"block":a.block,"pretty":pretty,
-      "compact":a.rounds-pretty-fails,"failed":fails,"fields_ok":valid,"avg_chars":avg,
+      "compact":a.rounds-pretty-fails,"failed":fails,"fields_ok":valid,"avg_chars":avg,"distinct":distinct,
       "per_block":blocks,"block_min":bs["min"],"block_max":bs["max"],
-      "temp":a.temp,"top_p":a.top_p,"top_k":TOPK,"ctk":C.ctk,"detail":rows},a.out)
+      "temp":a.temp,"top_p":a.top_p,"top_k":TOPK,"seed":None if a.no_seed else a.seed,
+      "ctk":C.ctk,"detail":rows},a.out)

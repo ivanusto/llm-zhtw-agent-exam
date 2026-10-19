@@ -23,6 +23,7 @@
 
 - [results/day14.md](results/day14.md)：三顆模型，以及一個讓三顆模型都被誤扣一分的判分 bug
 - [results/day15.md](results/day15.md)：五顆模型，以及三個方法學問題（vLLM 上貪婪解碼不可重現、十輪不夠、Day 14 有兩欄重現不出來）
+- [results/v2-2026-10-20.md](results/v2-2026-10-20.md)：第一份 v2 判準的結果，以及沒給 seed 時多輪取樣只抽到一個樣本的陷阱
 
 ## 判準版本
 
